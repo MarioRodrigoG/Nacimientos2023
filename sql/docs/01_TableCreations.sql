@@ -1,0 +1,176 @@
+
+--DB creation
+--CREATE DATABASE Nacimientos2023;
+--GO
+
+
+--DB using
+--USE RegistroNacimientos2023;
+--GO
+
+
+--For the initial load, we'll define all fields as VARCHAR(100) and then in a second step, We'll transform them to stricter types. This will minimize parsing errors:
+/*CREATE TABLE Nacimientos_2023Stg(
+NACIOEXTRANJERO VARCHAR(10),
+ENTIDADNACIMIENTO VARCHAR(10),
+MUNICIPIONACIMIENTO VARCHAR(10),
+EDAD VARCHAR(10),
+SECONSIDERAINDIGENA VARCHAR(10),
+HABLALENGUAINDIGENA VARCHAR(10),
+FECHANACIMIENTOMADRE VARCHAR(10),
+ESTADOCONYUGAL VARCHAR(10),
+RESIDEEXTRANJERO VARCHAR(10),
+ENTIDADRESIDENCIA VARCHAR(10),
+MUNICIPIORESIDENCIA VARCHAR(10),
+LOCALIDADRESIDENCIA VARCHAR(10),
+NUMEROEMBARAZOS VARCHAR(10),
+HIJOSNACIDOSMUERTOS VARCHAR(10),
+HIJOSNACIDOSVIVOS VARCHAR(10),
+HIJOSSOBREVIVIENTES VARCHAR(10),
+CONDICIONHIJOANTERIOR VARCHAR(10),
+VIVEHIJOANTERIOR VARCHAR(10),
+ORDENNACIMIENTO VARCHAR(10),
+ATENCIONPRENATAL VARCHAR(10),
+TRIMESTREPRIMERCONSULTA VARCHAR(10),
+TOTALCONSULTAS VARCHAR(10),
+SOBREVIVIOPARTO VARCHAR(10),
+AFILIACION VARCHAR(10),
+ESCOLARIDAD VARCHAR(10),
+INTERRUMPIOESTUDIOS VARCHAR(10),
+CLAVEOCUPACIONHABITUAL VARCHAR(10),
+TRABAJAACTUALMENTE VARCHAR(10),
+EDADPADRE VARCHAR(10),
+FECHANACIMIENTO VARCHAR(10),
+HORANACIMIENTO VARCHAR(10),
+SEXO VARCHAR(10),
+EDADGESTACIONAL VARCHAR(10),
+TALLA VARCHAR(10),
+PESO VARCHAR(10),
+APGAR VARCHAR(10),
+SILVERMAN VARCHAR(10),
+TAMIZAUDITIVO VARCHAR(10),
+VO VARCHAR(10),
+VACUNA_BCG VARCHAR(10),
+VACUNAHEPATITIS_B VARCHAR(10),
+VITAMINA_A VARCHAR(10),
+VITAMINA_K VARCHAR(10),
+PRODUCTOEMBARAZO VARCHAR(10),
+ORDENPRODUCTO VARCHAR(10),
+TOTALPRODUCTOS VARCHAR(10),
+CODIGOCIEANOMALIA1 VARCHAR(10),
+CODIGOCIEANOMALIA2 VARCHAR(10),
+LUGARNACIMIENTO VARCHAR(10),
+CLUES VARCHAR(15),
+TIEMPOTRASLADO VARCHAR(10),
+RESOLUCIONEMBARAZO VARCHAR(10),
+UTILIZOFORCEPS VARCHAR(10),
+TIPOCESAREA VARCHAR(10),
+PERSONALATENDIO VARCHAR(10),
+TIPOMEDICOATENDIO VARCHAR(10),
+ENTIDADFEDERATIVAPARTO VARCHAR (10),
+MUNICIPIOPARTO VARCHAR(10),
+LOCALIDADPARTO VARCHAR(10),
+CERTIFICADOPOR VARCHAR(10),
+CLUESCERTIFICA VARCHAR(15),
+ENTIDADFEDERATIVACERTIFICA VARCHAR(10),
+MUNICIPIOCERTIFICA VARCHAR(10),
+LOCALIDADCERTIFICA VARCHAR(10),
+FECHACERTIFICADO VARCHAR(10)
+);*/
+
+--We need to Create PK for Nacimientos_2023Stg
+--ALTER TABLE Nacimientos_2023Stg
+--ADD ID INT IDENTITY (1,1) PRIMARY KEY;
+
+
+--Queries that evaluate the data quality
+-- Count all the rows
+--SELECT TOP 100 *
+--FROM dbo.Nacimientos_2023Stg;
+
+--Now we have a look of table, let's create the definitive table that we will use with just the columns need and data types defining the DDL
+--CREATE TABLE dbo.Nacimientos_Final (
+--	EntidadNacimiento TINYINT,
+--	MunicipioNacimiento SMALLINT,
+--	EdadMadre TINYINT,
+--	SeConsideraIndigena CHAR(1),
+--	HablaLenguaIndigena CHAR(1),
+--	EntidadResidencia CHAR(2),
+--	MunicipioResidencia CHAR(3),
+--	NumeroEmbarazos TINYINT,
+--	HijosNacidosMuertos TINYINT,
+--	HijosNacidosVivos TINYINT,
+--	HijosSobrevivientes TINYINT,
+--	OrdenNacimiento TINYINT,
+--	SobrevivioParto CHAR(1),
+--	InterrumpioEstudios CHAR(1),
+--	TrabajaActualmente CHAR(1),
+--	EdadPadre TINYINT,
+--	HoraNacimiento TIME,
+--	Sexo CHAR(1),
+--	Talla TINYINT,
+--	Peso SMALLINT,
+--	CLUES CHAR(15),
+--	TiempoTraslado TIME
+--);
+--GO
+
+
+--Now, We going to load the data from staging to production, ETL
+-- We will clean any previous data from table (optional) 
+--TRUNCATE TABLE Nacimientos_Final;
+
+
+-- Let's insert data with the new conversions and validations, TRY CAST /TRY CONVERT prevent errors when converting data. If conversion fails, it just returns NULL instead of breaking the query.
+--INSERT INTO Nacimientos_Final (
+--    EntidadNacimiento,
+--    MunicipioNacimiento,
+--    EdadMadre,
+--    SeConsideraIndigena,
+--    HablaLenguaIndigena,
+--    EntidadResidencia,
+--    MunicipioResidencia,
+--    NumeroEmbarazos,
+--    HijosNacidosMuertos,
+--    HijosNacidosVivos,
+--    HijosSobrevivientes,
+--    OrdenNacimiento,
+--    SobrevivioParto,
+--    InterrumpioEstudios,
+--    TrabajaActualmente,
+--    EdadPadre,
+--    HoraNacimiento,
+--    Sexo,
+--    Talla,
+--    Peso,
+--    CLUES,
+--    TiempoTraslado
+--)
+--SELECT
+--    RIGHT('00' + REPLACE(LTRIM(RTRIM(ENTIDADNACIMIENTO)), '"', ''), 2),
+--    RIGHT('000' + REPLACE(LTRIM(RTRIM(MUNICIPIONACIMIENTO)), '"', ''), 3),
+--    TRY_CAST(REPLACE(LTRIM(RTRIM(EDAD)), '"', '') AS TINYINT),
+--    UPPER(LEFT(REPLACE(LTRIM(RTRIM(SECONSIDERAINDIGENA)), '"', ''), 1)),
+--    UPPER(LEFT(REPLACE(LTRIM(RTRIM(HABLALENGUAINDIGENA)), '"', ''), 1)),
+--    RIGHT('00' + REPLACE(LTRIM(RTRIM(ENTIDADRESIDENCIA)), '"', ''), 2),
+--    RIGHT('000' + REPLACE(LTRIM(RTRIM(MUNICIPIORESIDENCIA)), '"', ''), 3),
+--    TRY_CAST(REPLACE(LTRIM(RTRIM(NUMEROEMBARAZOS)), '"', '') AS TINYINT),
+--    TRY_CAST(REPLACE(LTRIM(RTRIM(HIJOSNACIDOSMUERTOS)), '"', '') AS TINYINT),
+--    TRY_CAST(REPLACE(LTRIM(RTRIM(HIJOSNACIDOSVIVOS)), '"', '') AS TINYINT),
+--    TRY_CAST(REPLACE(LTRIM(RTRIM(HIJOSSOBREVIVIENTES)), '"', '') AS TINYINT),
+--    TRY_CAST(REPLACE(LTRIM(RTRIM(ORDENNACIMIENTO)), '"', '') AS TINYINT),
+--    UPPER(LEFT(REPLACE(LTRIM(RTRIM(SOBREVIVIOPARTO)), '"', ''), 1)),
+--    UPPER(LEFT(REPLACE(LTRIM(RTRIM(INTERRUMPIOESTUDIOS)), '"', ''), 1)),
+--    UPPER(LEFT(REPLACE(LTRIM(RTRIM(TRABAJAACTUALMENTE)), '"', ''), 1)),
+--    TRY_CAST(REPLACE(LTRIM(RTRIM(EDADPADRE)), '"', '') AS TINYINT),
+--    TRY_CONVERT(TIME, REPLACE(LTRIM(RTRIM(HORANACIMIENTO)), '"', ''), 108),
+--    UPPER(LEFT(REPLACE(LTRIM(RTRIM(SEXO)), '"', ''), 1)),
+--    TRY_CAST(REPLACE(LTRIM(RTRIM(TALLA)), '"', '') AS TINYINT),
+--    TRY_CAST(REPLACE(LTRIM(RTRIM(PESO)), '"', '') AS SMALLINT),
+--    LEFT(REPLACE(LTRIM(RTRIM(CLUES)), '"', ''), 15),
+--    TRY_CONVERT(TIME, REPLACE(LTRIM(RTRIM(TIEMPOTRASLADO)), '"', ''), 108)
+--FROM Nacimientos_2023Stg;
+
+--We need to create as well out PK for this table
+--ALTER TABLE Nacimientos_Final
+--ADD ID INT IDENTITY (1,1) PRIMARY KEY;
