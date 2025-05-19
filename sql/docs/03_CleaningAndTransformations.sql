@@ -1,17 +1,56 @@
--- We (made in purpose) have two digits for number from 1 to 9 (01) in column EntidadResidencia but column EntidadNacimiento does not have, We'll  normalize the table
---ALTER TABLE Nacimientos_Final
---ADD EntidadNacNor AS RIGHT('00' + CAST (EntidadNacimiento AS VARCHAR(2)),2) PERSISTED;
-
---Now let's create the Dimentional for Entidades
--- We beging creating and populating with the 32 federative entities
+-- In order to perform some quality checks , we need to create a dimensional table for entidad (state)
 --CREATE TABLE Dim_Entidad (
---  EntidadID     TINYINT      NOT NULL  PRIMARY KEY,   -- 1–32
---  EntidadCode   CHAR(2)      NOT NULL, -- zero-padded code: '01' … '32'
---  EntidadNombre VARCHAR(100) NOT NULL  -- full name
+--  EntidadID    TINYINT   NOT NULL PRIMARY KEY,
+--  EntidadNombre VARCHAR(100) NOT NULL
 --);
---GO
 
---Populate table
+-- Now we have the table, let's ensure the "No especificado" values we need to values like 0,88,99 that are not related to any mexican state
+--INSERT INTO Dim_Entidad (EntidadID, EntidadNombre)
+--VALUES 
+--  (0,  'No especificado'),
+--  (88, 'No especificado'),
+--  (99, 'No especificado');
+
+-- And finally, insert the values for related to each one of the mexican states
+--INSERT INTO Dim_Entidad (EntidadID, EntidadNombre)
+--VALUES
+--  (1,  'Aguascalientes'),
+--  (2,  'Baja California'),
+--  (3,  'Baja California Sur'),
+--  (4,  'Campeche'),
+--  (5,  'Coahuila'),
+--  (6,  'Colima'),
+--  (7,  'Chiapas'),
+--  (8,  'Chihuahua'),
+--  (9,  'Ciudad de México'),
+--  (10, 'Durango'),
+--  (11, 'Guanajuato'),
+--  (12, 'Guerrero'),
+--  (13, 'Hidalgo'),
+--  (14, 'Jalisco'),
+--  (15, 'México'),
+--  (16, 'Michoacán'),
+--  (17, 'Morelos'),
+--  (18, 'Nayarit'),
+--  (19, 'Nuevo León'),
+--  (20, 'Oaxaca'),
+--  (21, 'Puebla'),
+--  (22, 'Querétaro'),
+--  (23, 'Quintana Roo'),
+--  (24, 'San Luis Potosí'),
+--  (25, 'Sinaloa'),
+--  (26, 'Sonora'),
+--  (27, 'Tabasco'),
+--  (28, 'Tamaulipas'),
+--  (29, 'Tlaxcala'),
+--  (30, 'Veracruz'),
+--  (31, 'Yucatán'),
+--  (32, 'Zacatecas');
+--Ensure the results are correct
+--SELECT * 
+--FROM Dim_Entidad
+--ORDER BY EntidadID;
+
 
 -- Cheking outliers
 --SELECT SeConsideraIndigena, COUNT(SeConsideraIndigena) FROM Nacimientos_Final
@@ -31,9 +70,6 @@
 --The most native (indigenas) populated states (entidades federativas) in mexico are Oaxaca, Chiapas Yucatan and Guerrero, that does not fit with data but we need now to ensure when these mistakes have been done analyzing  
 --At this moment we noticed that  we need to have FechaNacimiento (date of birth), and it's values from Nacimientos_2023Stg.FECHANACIMIENTO but we will face one little problem: FECHANACIMIENTO is missing the last '3'  because format is in DD/MM/YYY 
 --Let's work on it 
---Add column to the table 
---ALTER TABLE Nacimientos_Final
---ADD FechaNacimiento DATE;
 
 --Now let's populate the new column using the data from FECHANACIMIENTO
 --UPDATE A
@@ -65,6 +101,7 @@
 --FROM Nacimientos_Final f
 --INNER JOIN Nacimientos_2023Stg n23
 --    ON f.ID = n23.ID; -- Ensure Join is correct
+
 
 --Good now it's time to ensure if mistakes regarding SeConsideraIndigena are related to date
 --SELECT FechaNacimiento AS Fecha,SeConsideraIndigena, COUNT(*) AS Registros
@@ -226,6 +263,14 @@
 --		ELSE NULL
 --	END;
 
+
+
+
+
+
+
+
+
 -- Let's take a look with Sexo 
 --SELECT AVG(CAST(Talla AS FLOAT)) AS AvgTalla, AVG(CAST(Peso AS FLOAT)) AS AvgPeso, MAX(Talla) AS MaxTalla, MAX(Peso) AS MaxPeso, MIN(Talla) AS MinTalla, MIN(Peso) As MinPeso, COUNT(*) AS Conteo, Sexo 
 --FROM Nacimientos_Final 
@@ -281,9 +326,3 @@
 --	ELSE 'No especificado' -- Not specified
 --END;
 
---And finally let's change HoraNacimiento and TiempoTraslado in order to get just HH:MM:SS
---ALTER TABLE Nacimientos_Final
---ALTER COLUMN HoraNacimiento TIME(0) NULL;
-
---ALTER TABLE Nacimientos_Final
---ALTER COLUMN TiempoTraslado TIME(0) NULL;

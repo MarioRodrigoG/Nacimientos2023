@@ -95,7 +95,7 @@ FECHACERTIFICADO VARCHAR(10)
 --	EdadMadre TINYINT,
 --	SeConsideraIndigena CHAR(1),
 --	HablaLenguaIndigena CHAR(1),
---	EntidadResidencia CHAR(2),
+--	EntidadResidencia TINYINT,
 --	MunicipioResidencia CHAR(3),
 --	NumeroEmbarazos TINYINT,
 --	HijosNacidosMuertos TINYINT,
@@ -111,9 +111,10 @@ FECHACERTIFICADO VARCHAR(10)
 --	Talla TINYINT,
 --	Peso SMALLINT,
 --	CLUES CHAR(15),
---	TiempoTraslado TIME
+--	TiempoTraslado VARCHAR(5) NULL
 --);
 --GO
+
 
 
 --Now, We going to load the data from staging to production, ETL
@@ -168,9 +169,12 @@ FECHACERTIFICADO VARCHAR(10)
 --    TRY_CAST(REPLACE(LTRIM(RTRIM(TALLA)), '"', '') AS TINYINT),
 --    TRY_CAST(REPLACE(LTRIM(RTRIM(PESO)), '"', '') AS SMALLINT),
 --    LEFT(REPLACE(LTRIM(RTRIM(CLUES)), '"', ''), 15),
---    TRY_CONVERT(TIME, REPLACE(LTRIM(RTRIM(TIEMPOTRASLADO)), '"', ''), 108)
+--     LEFT( REPLACE( LTRIM(RTRIM(TIEMPOTRASLADO)),'"','' ), 5 )
 --FROM Nacimientos_2023Stg;
 
 --We need to create as well out PK for this table
 --ALTER TABLE Nacimientos_Final
 --ADD ID INT IDENTITY (1,1) PRIMARY KEY;
+
+
+

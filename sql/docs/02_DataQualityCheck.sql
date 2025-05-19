@@ -27,3 +27,7 @@
 
 -- Indígena different to 1/2
 --SELECT DISTINCT SeConsideraIndigena FROM dbo.Nacimientos_Final;
+
+-- Mexico has 32 Entidades Federativas (states) each one of them has a number alphabetically related, we need to ensure if we have 32 values here, if we do not have them, we should called the others at No especificado (Not specified)
+--SELECT DISTINCT EntidadNacimiento FROM Nacimientos_Final ORDER BY EntidadNacimiento;
+--SELECT DISTINCT EntidadResidencia FROM Nacimientos_Final ORDER BY EntidadResidencia;
