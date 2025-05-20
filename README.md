@@ -28,7 +28,7 @@ Nacimientos2023/ # Root folder
 
 - Dataset **Registros de Nacimientos 2023 (62.4 Mb) **
 
-- http://www.dgis.salud.gob.mx/contenidos/basesdedatos/da_nacimientos_gobmx.html
+- https://www.datos.gob.mx/dataset/registro_nacimientos/resource/a9cc472d-4c3f-4e3b-9c3f-89141385318c
 
 ### Setup Steps
 
