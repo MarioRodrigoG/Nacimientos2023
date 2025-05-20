@@ -57,7 +57,7 @@ Execute `sql/docs/04_MoreDimTables.sql` to define dimentional tables that will b
 
 
 
-###Power BI Report Pages
+### Power BI Report Pages
 - **Overview:** Key national KPIs and summary cards
 
 - ** Geography:** Choropleth map of births by state
