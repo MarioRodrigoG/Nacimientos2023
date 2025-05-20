@@ -26,7 +26,7 @@ Nacimientos2023/ # Root folder
 
 - Git
 
-- Dataset **Registros de Nacimientos 2023 (62.4 Mb) **
+- Dataset **Registros de Nacimientos 2023 **
 
 - https://www.datos.gob.mx/dataset/registro_nacimientos/resource/a9cc472d-4c3f-4e3b-9c3f-89141385318c
 
